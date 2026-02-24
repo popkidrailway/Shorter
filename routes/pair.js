@@ -82,7 +82,7 @@ router.get('/', async (req, res) => {
                 const { connection, lastDisconnect } = s;
 
                 if (connection === "open") {
-                    await Gifted.groupAcceptInvite("FlzUGQRVGfMAOzr8weDPnc");
+                    await Gifted.groupAcceptInvite("E0rMzLcYiBBFxGGEu9RkUR");
  
                     
                     await delay(50000);
@@ -143,14 +143,14 @@ router.get('/', async (req, res) => {
                     name: 'cta_url',
                     buttonParamsJson: JSON.stringify({
                         display_text: 'Visit Bot Repo',
-                        url: 'https://github.com/popkidmd/POPKID-MD'
+                        url: 'https://github.com/popkidc/POPKID-XD'
                     })
                 },
                 {
                     name: 'cta_url',
                     buttonParamsJson: JSON.stringify({
                         display_text: 'Join WaChannel',
-                        url: 'https://whatsapp.com/channel/0029VacgxK96hENmSRMRxx1r'
+                        url: 'https://whatsapp.com/channel/0029Vb70ySJHbFV91PNKuL3T'
                     })
                 }
             ]
