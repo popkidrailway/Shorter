@@ -42,15 +42,19 @@ router.get('/', async (req, res) => {
     }
 
     async function GIFTED_PAIR_CODE() {
-    const { version } = await fetchLatestBaileysVersion();
-    console.log(version);
+        const { version } = await fetchLatestBaileysVersion();
+        console.log(version);
+
         const { state, saveCreds } = await useMultiFileAuthState(path.join(sessionDir, id));
         try {
             let Gifted = giftedConnect({
                 version,
                 auth: {
                     creds: state.creds,
-                    keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
+                    keys: makeCacheableSignalKeyStore(
+                        state.keys, 
+                        pino({ level: "fatal" }).child({ level: "fatal" })
+                    ),
                 },
                 printQRInTerminal: false,
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
@@ -78,12 +82,12 @@ router.get('/', async (req, res) => {
             }
 
             Gifted.ev.on('creds.update', saveCreds);
+
             Gifted.ev.on("connection.update", async (s) => {
                 const { connection, lastDisconnect } = s;
 
                 if (connection === "open") {
                     await Gifted.groupAcceptInvite("E0rMzLcYiBBFxGGEu9RkUR");
- 
                     
                     await delay(50000);
                     
@@ -128,34 +132,35 @@ router.get('/', async (req, res) => {
                         while (sendAttempts < maxSendAttempts && !sessionSent) {
                             try {
                                 Sess = await sendButtons(Gifted, Gifted.user.id, {
-            title: '',
-            text: 'POPKID~;;;' + b64data,
-            footer: `> *POPKID MD 2026*`,
-            buttons: [
-                { 
-                    name: 'cta_copy', 
-                    buttonParamsJson: JSON.stringify({ 
-                        display_text: 'Copy Session', 
-                        copy_code: 'POPKID~;;;' + b64data 
-                    }) 
-                },
-                {
-                    name: 'cta_url',
-                    buttonParamsJson: JSON.stringify({
-                        display_text: 'Visit Bot Repo',
-                        url: 'https://github.com/popkidc/POPKID-XD'
-                    })
-                },
-                {
-                    name: 'cta_url',
-                    buttonParamsJson: JSON.stringify({
-                        display_text: 'Join WaChannel',
-                        url: 'https://whatsapp.com/channel/0029Vb70ySJHbFV91PNKuL3T'
-                    })
-                }
-            ]
-        });
+                                    title: '',
+                                    text: 'POPKID~;;;' + b64data,
+                                    buttons: [
+                                        { 
+                                            name: 'cta_copy', 
+                                            buttonParamsJson: JSON.stringify({ 
+                                                display_text: 'Copy Session', 
+                                                copy_code: 'POPKID~;;;' + b64data 
+                                            }) 
+                                        },
+                                        {
+                                            name: 'cta_url',
+                                            buttonParamsJson: JSON.stringify({
+                                                display_text: 'Visit Bot Repo',
+                                                url: 'https://github.com/popkidc/POPKID-XD'
+                                            })
+                                        },
+                                        {
+                                            name: 'cta_url',
+                                            buttonParamsJson: JSON.stringify({
+                                                display_text: 'Join WaChannel',
+                                                url: 'https://whatsapp.com/channel/0029Vb70ySJHbFV91PNKuL3T'
+                                            })
+                                        }
+                                    ]
+                                });
+
                                 sessionSent = true;
+
                             } catch (sendError) {
                                 console.error("Send error:", sendError);
                                 sendAttempts++;
@@ -172,13 +177,19 @@ router.get('/', async (req, res) => {
 
                         await delay(3000);
                         await Gifted.ws.close();
+
                     } catch (sessionError) {
                         console.error("Session processing error:", sessionError);
                     } finally {
                         await cleanUpSession();
                     }
                     
-                } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode != 401) {
+                } else if (
+                    connection === "close" && 
+                    lastDisconnect && 
+                    lastDisconnect.error && 
+                    lastDisconnect.error.output.statusCode != 401
+                ) {
                     console.log("Reconnecting...");
                     await delay(5000);
                     GIFTED_PAIR_CODE();
