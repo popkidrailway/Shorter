@@ -1,13 +1,13 @@
 {
-  "name": "popkid-session",
+  "name": "atassa-session",
   "main": "./index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "pm2 start index.js --deep-monitoring --attach --name popkidsess",
-    "stop": "pm2 stop popkidsess",
-    "restart": "pm2 restart popkidsess"
+    "start": "pm2 start index.js --deep-monitoring --attach --name giftedsess",
+    "stop": "pm2 stop giftedsess",
+    "restart": "pm2 restart giftedsess"
   },
-  "author": "Popkid Tech",
+  "author": "Gifted Tech",
   "license": "MIT",
   "dependencies": {
     "@whiskeysockets/baileys": "npm:baileys@^6.7.21",
