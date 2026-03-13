@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>POPKID MD | Pair Code Login</title>
+  <meta name="description" content="Link your WhatsApp account to POPKID-MD using a pair code. Fast, secure, and simple.">
+  <meta name="theme-color" content="#ff3b30">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="POPKID MD | Pair Code Login">
+  <meta property="og:description" content="Link your WhatsApp with POPKID-MD using a pair code — no QR scan needed.">
+  <meta property="og:image" content="https://files.catbox.moe/aapw1p.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="https://files.catbox.moe/aapw1p.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #000000;
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      scrollbar-width: none;
+    }
+    body::-webkit-scrollbar { display: none; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ff3b30 0%, #ff9f0a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .blob {
+      position: fixed; border-radius: 50%;
+      filter: blur(85px); pointer-events: none; z-index: 0; will-change: transform;
+    }
+    @keyframes blobFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%      { transform: translate(25px,-25px) scale(1.1); }
+    }
+
+    .nav-glass {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: 12px;
+      color: #efeff4; text-decoration: none;
+      font-size: 0.95rem; font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .sidebar-link:active { background: rgba(255, 59, 48, 0.2); }
+
+    #sidebar { 
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+      background: rgba(28, 28, 30, 0.95);
+      backdrop-filter: blur(25px);
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 24px; border-radius: 14px;
+      font-weight: 600; font-size: 0.9rem;
+      cursor: pointer; border: none; text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn:active { transform: scale(0.96); opacity: 0.8; }
+    .btn-primary { background: #ff3b30; color: #fff; box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-ghost { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+    .card {
+      background: rgba(28, 28, 30, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 0.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+    }
+
+    .input-field {
+      background: rgba(255, 255, 255, 0.05);
+      border: 0.5px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff; border-radius: 14px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    .input-field:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #ff3b30;
+      box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.15);
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-6px); }
+      40%,80%  { transform: translateX(6px); }
+    }
+    .shake { animation: shake 0.4s ease; }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .code-display {
+      font-size: 2.25rem; font-weight: 800; letter-spacing: 4px;
+      color: #ff3b30;
+      text-shadow: 0 0 20px rgba(255, 59, 48, 0.3);
+    }
+
+    .copy-btn {
+      background: rgba(255, 59, 48, 0.15); border: 0.5px solid rgba(255, 59, 48, 0.3);
+      border-radius: 12px; color: #ff453a;
+      padding: 10px 20px; font-size: 0.85rem; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .copy-btn.copied { background: #34c759; color: #fff; border-color: #34c759; }
+
+    [data-anim] {
+      will-change: transform, opacity;
+      transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    [data-anim="fade-up"] { opacity: 0; transform: translateY(30px); }
+    [data-anim="zoom-in"] { opacity: 0; transform: scale(0.95); }
+    [data-anim].in-view { opacity: 1; transform: translateY(0) scale(1); }
+  </style>
+</head>
+<body>
+  <div class="blob w-96 h-96 bg-red-600/20 top-[-100px] left-[-50px]" style="animation:blobFloat 15s ease-in-out infinite;"></div>
+  <div class="blob w-80 h-80 bg-orange-600/10 bottom-[5%] right-[-50px]" style="animation:blobFloat 12s ease-in-out 3s infinite;"></div>
+
+  <nav class="nav-glass sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <img src="https://files.catbox.moe/aapw1p.png" alt="POPKID" class="w-9 h-9 rounded-xl object-cover shadow-lg shadow-red-500/20">
+        <span class="text-lg font-bold tracking-tight">POPKID-MD</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="https://github.com/popkidc/POPKID-XD" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Source</a>
+        <a href="/pair" class="text-sm font-bold text-red-500">Pair Code</a>
+        <a href="/qr" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">QR Code</a>
+      </div>
+      <button id="menuBtn" class="md:hidden p-2 text-white">
+        <i class="fas fa-bars-staggered text-xl" id="menuIcon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <aside id="sidebar" class="fixed top-0 left-0 z-50 h-full w-72 flex flex-col pt-10 pb-8 transform -translate-x-full border-r border-white/10">
+    <div class="flex items-center justify-between px-6 mb-10">
+      <span class="text-xl font-bold gradient-text">Menu</span>
+      <button id="closeBtn" class="text-gray-400"><i class="fas fa-xmark text-xl"></i></button>
+    </div>
+    <div class="px-4 flex-1 space-y-2">
+      <a href="/" class="sidebar-link"><i class="fas fa-house"></i> Home</a>
+      <a href="/pair" class="sidebar-link bg-red-500/10 text-red-500"><i class="fas fa-link"></i> Pair Code</a>
+      <a href="/qr" class="sidebar-link"><i class="fas fa-qrcode"></i> QR Code</a>
+    </div>
+  </aside>
+  <div id="sidebarOverlay" class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <main class="relative z-10">
+    <section class="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center px-6 py-10">
+      <div class="w-full max-w-sm">
+
+        <div class="text-center mb-10" data-anim="fade-up">
+          <div class="flex justify-center mb-6">
+            <div class="relative p-1 rounded-[30%] bg-gradient-to-tr from-red-600 to-orange-400 shadow-2xl shadow-red-500/40">
+              <img src="https://files.catbox.moe/aapw1p.png" alt="POPKID" class="w-24 h-24 rounded-[28%] object-cover border-2 border-black/10">
+            </div>
+          </div>
+          <h1 class="text-3xl font-extrabold tracking-tight mb-2">Pair Code</h1>
+          <p class="text-gray-400 text-sm">Enter your phone number to link account</p>
+        </div>
+
+        <div class="card p-8" data-anim="zoom-in">
+          <div id="formSection">
+            <div class="mb-6">
+              <label for="phoneNumber" class="block text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-3 ml-1">Phone Number</label>
+              <div class="relative">
+                <i class="fas fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
+                <input id="phoneNumber" type="text" inputmode="numeric" placeholder="2547xxxxxxxx" class="input-field pl-11 pr-4 py-3.5">
+              </div>
+              <p id="phoneError" class="text-red-500 text-[11px] mt-2 hidden font-bold"><i class="fas fa-circle-exclamation mr-1"></i> <span id="phoneErrorText"></span></p>
+            </div>
+
+            <div class="mb-8">
+              <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-3 ml-1">Session Protocol</label>
+              <div class="flex p-1 rounded-2xl bg-black/40 border border-white/5">
+                <button type="button" id="typeShort" onclick="selectType('short')" class="flex-1 py-2 text-xs font-bold rounded-xl bg-red-500 text-white shadow-lg">SHORT</button>
+                <button type="button" id="typeLong" onclick="selectType('long')" class="flex-1 py-2 text-xs font-bold rounded-xl text-gray-500 transition-all">LONG</button>
+              </div>
+            </div>
+
+            <button id="submitBtn" class="btn btn-primary w-full">
+              <span id="btnContent" class="flex items-center gap-2"><i class="fas fa-bolt"></i> Get Pair Code</span>
+              <span id="btnLoading" class="hidden flex items-center gap-2"><span class="spinner"></span> Connecting...</span>
+            </button>
+            <p id="generalError" class="text-red-500 text-xs text-center mt-4 hidden font-medium"></p>
+          </div>
+
+          <div id="resultSection" class="hidden">
+            <div id="fallbackBanner" class="hidden mb-6 p-4 rounded-2xl border border-blue-500/20 bg-blue-500/10">
+              <p class="text-blue-400 text-[11px] font-bold leading-relaxed">Session store not configured — using Long session mode.</p>
+            </div>
+            
+            <div class="text-center space-y-4">
+              <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
+                <i class="fas fa-check text-green-500 text-lg"></i>
+              </div>
+              <div>
+                <h3 class="text-white font-bold">Code Generated</h3>
+                <p class="text-gray-500 text-[11px]">Enter this in WhatsApp → Linked Devices</p>
+              </div>
+              
+              <div class="py-6 px-4 bg-white/5 rounded-2xl border border-white/5">
+                <p id="pairCode" class="code-display font-mono"></p>
+              </div>
+
+              <div class="flex gap-3">
+                <button id="copyBtn" class="copy-btn flex-1 flex items-center justify-center gap-2">
+                  <i class="fas fa-copy"></i> <span id="copyText">Copy</span>
+                </button>
+                <button id="newCodeBtn" class="btn btn-ghost flex-1 text-xs font-bold">New Code</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10 grid grid-cols-3 gap-4" data-anim="fade-up">
+            <div class="text-center"><i class="fas fa-lock text-red-500/60 mb-2"></i><span class="block text-[10px] uppercase text-gray-500 font-bold tracking-tighter">Secure</span></div>
+            <div class="text-center border-x border-white/10"><i class="fas fa-bolt-lightning text-red-500/60 mb-2"></i><span class="block text-[10px] uppercase text-gray-500 font-bold tracking-tighter">Instant</span></div>
+            <div class="text-center"><i class="fas fa-globe text-red-500/60 mb-2"></i><span class="block text-[10px] uppercase text-gray-500 font-bold tracking-tighter">Global</span></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="py-10 px-6 border-t border-white/5">
+      <div class="max-w-6xl mx-auto flex flex-col items-center gap-6">
+        <p class="text-[11px] font-medium text-gray-600 uppercase tracking-widest text-center">
+          &copy; <span id="yr"></span> POPKID TECH &bull; Kenya
+        </p>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const menuBtn = document.getElementById('menuBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function openSidebar() {
+      sidebar.style.transform = 'translateX(0)';
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
+    }
+    function closeSidebar() {
+      sidebar.style.transform = 'translateX(-100%)';
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+    }
+    menuBtn.addEventListener('click', openSidebar);
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => e.isIntersecting ? e.target.classList.add('in-view') : null);
+    }, { threshold: 0.1 });
+    document.querySelectorAll('[data-anim]').forEach(el => observer.observe(el));
+
+    let selectedType = 'short';
+    function selectType(type) {
+      selectedType = type;
+      const shortBtn = document.getElementById('typeShort');
+      const longBtn  = document.getElementById('typeLong');
+      if (type === 'short') {
+        shortBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl bg-red-500 text-white shadow-lg transition-all";
+        longBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl text-gray-500 transition-all";
+      } else {
+        longBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl bg-red-500 text-white shadow-lg transition-all";
+        shortBtn.className = "flex-1 py-2 text-xs font-bold rounded-xl text-gray-500 transition-all";
+      }
+    }
+
+    const phoneInput = document.getElementById('phoneNumber');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnContent = document.getElementById('btnContent');
+    const btnLoading = document.getElementById('btnLoading');
+    const phoneError = document.getElementById('phoneError');
+    const phoneErrTxt = document.getElementById('phoneErrorText');
+    const generalError = document.getElementById('generalError');
+    const formSection = document.getElementById('formSection');
+    const resultSection = document.getElementById('resultSection');
+    const pairCode = document.getElementById('pairCode');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyText = document.getElementById('copyText');
+    const newCodeBtn = document.getElementById('newCodeBtn');
+
+    phoneInput.addEventListener('input', () => {
+      phoneInput.value = phoneInput.value.replace(/\D/g, '');
+      phoneError.classList.add('hidden');
+    });
+
+    submitBtn.addEventListener('click', async () => {
+      const num = phoneInput.value.trim();
+      if (num.length < 10) {
+        phoneErrTxt.textContent = 'Invalid number format';
+        phoneError.classList.remove('hidden');
+        phoneInput.classList.add('shake');
+        setTimeout(() => phoneInput.classList.remove('shake'), 400);
+        return;
+      }
+      btnContent.classList.add('hidden');
+      btnLoading.classList.remove('hidden');
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch(`/code?number=${encodeURIComponent(num)}&type=${selectedType}`);
+        const data = await res.json();
+        if (!res.ok || !data.code) throw new Error(data.code || 'Request failed');
+        
+        pairCode.textContent = data.code;
+        if (data.fallback) document.getElementById('fallbackBanner').classList.remove('hidden');
+        formSection.classList.add('hidden');
+        resultSection.classList.remove('hidden');
+      } catch (err) {
+        generalError.textContent = err.message;
+        generalError.classList.remove('hidden');
+      } finally {
+        btnContent.classList.remove('hidden');
+        btnLoading.classList.add('hidden');
+        submitBtn.disabled = false;
+      }
+    });
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(pairCode.textContent).then(() => {
+        copyText.textContent = 'Copied';
+        copyBtn.classList.add('copied');
+        setTimeout(() => { copyText.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 2000);
+      });
+    });
+
+    newCodeBtn.addEventListener('click', () => {
+      resultSection.classList.add('hidden');
+      formSection.classList.remove('hidden');
+      phoneInput.value = '';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>POPKID MD | WhatsApp Bot Session Generator</title>
+  <meta name="description" content="POPKID-MD — powerful WhatsApp bot session generator. Fast, secure, and easy to use.">
+  <meta name="theme-color" content="#ff3b30">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="POPKID MD | WhatsApp Bot">
+  <meta property="og:description" content="Generate your WhatsApp session with POPKID-MD.">
+  <meta property="og:image" content="https://files.catbox.moe/aapw1p.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      scrollbar-width: none;
+    }
+    body::-webkit-scrollbar { display: none; }
+
+    /* Shiny iOS Gradients */
+    .gradient-text {
+      background: linear-gradient(135deg, #ff3b30 0%, #ff9f0a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Glass Morphism */
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    /* Shiny Button Shimmer */
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .btn-shiny {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shiny::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    .blob {
+      position: fixed; border-radius: 50%;
+      filter: blur(80px); pointer-events: none; z-index: 0;
+      will-change: transform;
+    }
+    @keyframes blobFloat {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(40px, -40px) scale(1.15); }
+    }
+
+    .nav-glass {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    }
+
+    /* Feature Cards */
+    .feature-card {
+      background: rgba(28, 28, 30, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      border: 0.5px solid rgba(255,255,255,0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: rgba(255, 59, 48, 0.5);
+      background: rgba(255, 59, 48, 0.05);
+    }
+    /* The "Gloss" reflection on cards */
+    .feature-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 50%;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.05), transparent);
+      pointer-events: none;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 30px; border-radius: 16px;
+      font-weight: 700; font-size: 0.9rem;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn:active { transform: scale(0.95); }
+    .btn-primary { background: #ff3b30; color: #fff; box-shadow: 0 10px 20px rgba(255, 59, 48, 0.3); }
+    .btn-ghost { background: rgba(255,255,255,0.1); color: #fff; }
+
+    #sidebar {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      background: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(30px);
+    }
+
+    [data-anim] {
+      will-change: transform, opacity;
+      transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    [data-anim="fade-up"] { opacity: 0; transform: translateY(40px); }
+    [data-anim="zoom-in"] { opacity: 0; transform: scale(0.9); }
+    [data-anim].in-view { opacity: 1; transform: translateY(0) scale(1); }
+
+    .status-badge {
+      background: rgba(52, 199, 89, 0.1);
+      border: 0.5px solid rgba(52, 199, 89, 0.3);
+      color: #32d74b;
+      padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="blob w-[500px] h-[500px] bg-red-600/20 top-[-150px] left-[-100px]" style="animation: blobFloat 14s ease-in-out infinite;"></div>
+  <div class="blob w-[400px] h-[400px] bg-orange-600/15 bottom-[-100px] right-[-100px]" style="animation: blobFloat 18s ease-in-out 2s infinite;"></div>
+
+  <nav class="nav-glass sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <img src="https://files.catbox.moe/aapw1p.png" alt="POPKID" class="w-10 h-10 rounded-2xl object-cover shadow-xl shadow-red-500/20">
+        <span class="text-xl font-black tracking-tight uppercase">Popkid<span class="text-red-500">MD</span></span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="/pair" class="text-sm font-semibold hover:text-red-500 transition-colors">Pair Code</a>
+        <a href="/qr" class="text-sm font-semibold hover:text-red-500 transition-colors">QR Code</a>
+        <a href="https://github.com/popkidc/POPKID-XD" target="_blank" class="text-sm font-semibold hover:text-red-500 transition-colors">Github</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="/pair" class="hidden md:flex btn btn-primary btn-shiny py-2.5 px-6 text-xs uppercase tracking-widest">Connect</a>
+        <button id="menuBtn" class="md:hidden text-white p-2">
+          <i class="fas fa-bars-staggered text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="sidebarOverlay" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300"></div>
+  <aside id="sidebar" class="fixed top-0 left-0 z-50 h-full w-72 flex flex-col pt-10 pb-8 transform -translate-x-full border-r border-white/10">
+    <div class="flex items-center justify-between px-8 mb-10">
+      <span class="text-2xl font-black gradient-text">MENU</span>
+      <button id="closeBtn" class="text-gray-400"><i class="fas fa-times text-xl"></i></button>
+    </div>
+    <div class="px-4 space-y-2 flex-1">
+      <a href="/" class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 text-red-500 font-bold"><i class="fas fa-house"></i> Home</a>
+      <a href="/pair" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 transition-all"><i class="fas fa-link"></i> Pair Code</a>
+      <a href="/qr" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 transition-all"><i class="fas fa-qrcode"></i> QR Code</a>
+      <a href="https://t.me/mauricegift" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 transition-all"><i class="fab fa-telegram"></i> Support</a>
+    </div>
+    <div class="px-8 pt-6 border-t border-white/5">
+        <p class="text-[10px] uppercase tracking-widest text-gray-600 font-bold">Powered by Popkid Tech</p>
+    </div>
+  </aside>
+
+  <main class="relative z-10">
+    <section class="min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-10">
+      <div class="max-w-4xl">
+        <div class="flex justify-center mb-6" data-anim="zoom-in">
+          <div class="relative p-1 rounded-[35%] bg-gradient-to-tr from-red-600 to-orange-400 shadow-2xl shadow-red-500/40">
+            <img src="https://files.catbox.moe/aapw1p.png" alt="POPKID" class="w-24 h-24 rounded-[32%] object-cover border-4 border-black/20">
+          </div>
+        </div>
+        <div class="mb-6" data-anim="fade-up">
+          <span class="status-badge"><i class="fas fa-circle text-[6px] mr-2 align-middle"></i> SYSTEM ONLINE</span>
+        </div>
+        <h1 class="text-5xl sm:text-6xl md:text-8xl font-black leading-[0.9] mb-6 tracking-tighter" data-anim="fade-up">
+          UNLEASH THE<br><span class="gradient-text">POWER OF MD</span>
+        </h1>
+        <p class="text-gray-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-medium" data-anim="fade-up">
+          The ultimate WhatsApp automation engine. Fast pairing, encrypted sessions, and premium performance for your bot.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4" data-anim="fade-up">
+          <a href="/pair" class="btn btn-primary btn-shiny w-full sm:w-auto px-10 py-5 text-lg">
+            GET STARTED <i class="fas fa-arrow-right ml-2 text-sm"></i>
+          </a>
+          <a href="/qr" class="btn btn-ghost w-full sm:w-auto px-10 py-5 text-lg">
+            <i class="fas fa-qrcode mr-2"></i> QR SCAN
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-24 px-6 max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="feature-card p-10" data-anim="fade-up">
+          <div class="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center mb-6 border border-red-500/20">
+            <i class="fas fa-bolt text-red-500 text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">Ultra Fast</h3>
+          <p class="text-gray-500 leading-relaxed font-medium">Engineered for speed. Get your session code in seconds with zero latency.</p>
+        </div>
+
+        <div class="feature-card p-10" data-anim="fade-up">
+          <div class="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20">
+            <i class="fas fa-shield-halved text-orange-500 text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">Military Grade</h3>
+          <p class="text-gray-500 leading-relaxed font-medium">End-to-end encryption ensures your session data remains private and secure.</p>
+        </div>
+
+        <div class="feature-card p-10" data-anim="fade-up">
+          <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 flex items-center justify-center mb-6 border border-yellow-500/20">
+            <i class="fas fa-code-branch text-yellow-500 text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">Open Source</h3>
+          <p class="text-gray-500 leading-relaxed font-medium">Built by developers, for developers. Fully customizable on our Github repo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-32 px-6">
+        <div class="max-w-4xl mx-auto glass p-12 md:p-20 rounded-[40px] text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-red-600/10 to-transparent pointer-events-none"></div>
+            
+            <div class="relative z-10" data-anim="zoom-in">
+                <h2 class="text-4xl md:text-6xl font-black mb-8 leading-tight">READY TO BOOST<br>YOUR EXPERIENCE?</h2>
+                <a href="/pair" class="btn btn-primary btn-shiny px-12 py-6 text-xl rounded-2xl">
+                    JOIN POPKID-MD <i class="fas fa-rocket ml-3"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-20 px-6 border-t border-white/5 bg-black">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div class="space-y-6">
+          <span class="text-2xl font-black tracking-tight">POPKID<span class="text-red-500">MD</span></span>
+          <p class="text-gray-500 text-sm font-medium">Advanced WhatsApp Multi-Device session generator. Kenya's finest bot solution.</p>
+          <div class="flex gap-4">
+            <a href="#" class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-red-500 hover:text-white transition-all"><i class="fab fa-github"></i></a>
+            <a href="#" class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-red-500 hover:text-white transition-all"><i class="fab fa-telegram"></i></a>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-2 col-span-2 gap-8">
+            <div class="space-y-4">
+                <h4 class="text-xs font-black uppercase tracking-widest text-gray-400">Services</h4>
+                <ul class="space-y-2 text-sm font-bold text-gray-600">
+                    <li><a href="/pair" class="hover:text-red-500">Pairing Code</a></li>
+                    <li><a href="/qr" class="hover:text-red-500">QR Login</a></li>
+                    <li><a href="#" class="hover:text-red-500">Bot Deployment</a></li>
+                </ul>
+            </div>
+            <div class="space-y-4">
+                <h4 class="text-xs font-black uppercase tracking-widest text-gray-400">About</h4>
+                <ul class="space-y-2 text-sm font-bold text-gray-600">
+                    <li><a href="#" class="hover:text-red-500">Documentation</a></li>
+                    <li><a href="#" class="hover:text-red-500">Privacy Policy</a></li>
+                    <li>&copy; <span id="yr"></span> Popkid Tech</li>
+                </ul>
+            </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const menuBtn = document.getElementById('menuBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    function openSidebar() {
+      sidebar.style.transform = 'translateX(0)';
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
+    }
+    function closeSidebar() {
+      sidebar.style.transform = 'translateX(-100%)';
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+    }
+
+    menuBtn.addEventListener('click', openSidebar);
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('[data-anim]').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
